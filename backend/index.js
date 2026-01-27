@@ -19,7 +19,17 @@ app.get("/", (req, res) => {
 // config
 const PORT = 3000;
 
-// db + server
-app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-});
+// db connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("✅ MongoDB connected successfully");
+
+    // start server ONLY after db connects
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err.message);
+  });
